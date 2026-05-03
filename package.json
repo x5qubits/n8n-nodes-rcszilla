@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-rcszilla",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Send free device-based or paid provider SMS and WhatsApp messages with queue tracking, replies, and AI auto-reply support.",
   "keywords": [
     "n8n-community-node-package",
@@ -34,7 +34,9 @@
     "url": "https://github.com/x5qubits/n8n-nodes-rcszilla/issues"
   },
   "author": {
-    "name": "RCSZilla"
+    "name": "RCSZilla",
+    "email": "postmaster@rcszilla.com",
+    "url": "https://rcszilla.com"
   },
   "main": "dist/nodes/RCSZilla/RCSZilla.node.js",
   "types": "dist/nodes/RCSZilla/RCSZilla.node.d.ts",
