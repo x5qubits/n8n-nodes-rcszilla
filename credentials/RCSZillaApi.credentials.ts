@@ -25,10 +25,10 @@ export class RCSZillaApi implements ICredentialType {
 		{
 			displayName: 'Base URL',
 			name: 'baseUrl',
-			type: 'string',
+			type: 'hidden',
 			default: 'https://api.rcszilla.com',
 			required: true,
-			description: 'RCSZilla API base URL, without the /?endpoint=... part',
+			description: 'RCSZilla API base URL',
 		},
 		{
 			displayName: 'API Token',

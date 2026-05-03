@@ -28,8 +28,9 @@ Node.js 18.17 or newer is required by current n8n community-node tooling.
 
 Create an **RCSZilla API** credential with:
 
-- **Base URL**: `https://api.rcszilla.com` or your self-hosted RCSZilla API URL.
 - **API Token**: a user API key or device token from RCSZilla.
+
+The public RCSZilla API URL is used automatically in n8n and is hidden from the credential form. Create an account at [rcszilla.com](https://rcszilla.com/) first, then generate an API key from the web panel.
 
 The node sends the token using both `Authorization: Bearer ...` and `X-API-Token` for compatibility with servers that strip authorization headers.
 
