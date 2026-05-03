@@ -32,7 +32,7 @@ export class RCSZillaApi implements ICredentialType {
 			},
 			default: '',
 			required: true,
-			description: 'A user API key or device token generated in RCSZilla',
+			description: 'A user API key or device token generated in your RCSZilla account. Register at https://rcszilla.com/ if you do not have an account yet.',
 		},
 	];
 
