@@ -17,7 +17,7 @@ export class RCSZilla implements INodeType {
 		group: ['output'],
 		version: 1,
 		subtitle: '={{$parameter["operation"]}}',
-		description: 'Send SMS and WhatsApp messages through RCSZilla',
+		description: 'Send free device-based or paid provider SMS and WhatsApp messages with queue tracking, replies, and AI auto-reply support',
 		defaults: {
 			name: 'RCSZilla',
 		},

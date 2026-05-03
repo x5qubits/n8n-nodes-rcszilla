@@ -1,6 +1,6 @@
 # n8n-nodes-rcszilla
 
-This is an n8n community node for [RCSZilla](https://rcszilla.com). It lets n8n workflows queue SMS or WhatsApp messages, check queue status, read pending queue items, update delivery state, submit inbound replies, and log outgoing device-side messages.
+This is an n8n community node for [RCSZilla](https://rcszilla.com). It lets n8n workflows send free device-based or paid provider SMS and WhatsApp messages, check queue status, read pending queue items, update delivery state, submit inbound replies, log outgoing device-side messages, and connect automation flows to RCSZilla AI auto-replies.
 
 ## Installation
 
@@ -41,6 +41,14 @@ The node sends the token using both `Authorization: Bearer ...` and `X-API-Token
 - **Mark Processing**, **Mark Sent**, **Mark Delivered**, **Mark Failed**: updates a queue item state.
 - **Submit Reply**: calls `submit_reply` to store an inbound SMS/WhatsApp reply.
 - **Log Outgoing**: calls `log_outgoing` for device-side or AI-generated sent messages.
+
+## What You Can Automate
+
+- Free SMS/WhatsApp delivery through connected Android devices.
+- Paid SMS routing through configured cloud providers.
+- Appointment reminders, confirmations, and cancellation replies.
+- AI-assisted auto-reply workflows using incoming messages and logged outgoing replies.
+- Queue status checks and delivery-state updates for reliable workflow branching.
 
 ## Publishing
 
