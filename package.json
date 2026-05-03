@@ -1,0 +1,59 @@
+{
+  "name": "n8n-nodes-rcszilla",
+  "version": "1.0.0",
+  "description": "n8n community node for sending SMS and WhatsApp messages through RCSZilla.",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "rcszilla",
+    "sms",
+    "whatsapp",
+    "messaging"
+  ],
+  "license": "MIT",
+  "homepage": "https://rcszilla.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rcszilla/n8n-nodes-rcszilla.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rcszilla/n8n-nodes-rcszilla/issues"
+  },
+  "author": {
+    "name": "RCSZilla"
+  },
+  "main": "dist/nodes/RCSZilla/RCSZilla.node.js",
+  "types": "dist/nodes/RCSZilla/RCSZilla.node.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -w -p tsconfig.json",
+    "lint": "eslint nodes credentials package.json",
+    "prepack": "npm run build"
+  },
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/RCSZillaApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/RCSZilla/RCSZilla.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@n8n/eslint-plugin-community-nodes": "^0.10.0",
+    "eslint": "^9.0.0",
+    "n8n-workflow": "^1.82.0",
+    "typescript": "^5.4.0"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}
