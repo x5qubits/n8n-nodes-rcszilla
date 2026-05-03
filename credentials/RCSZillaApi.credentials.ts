@@ -12,7 +12,7 @@ export class RCSZillaApi implements ICredentialType {
 
 	icon = 'file:../nodes/RCSZilla/rcszilla.png' as const;
 
-	documentationUrl = 'https://api.rcszilla.com/docs/';
+	documentationUrl = 'https://docs.rcszilla.com/';
 
 	properties: INodeProperties[] = [
 		{

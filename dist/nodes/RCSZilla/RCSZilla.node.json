@@ -6,12 +6,12 @@
   "resources": {
     "primaryDocumentation": [
       {
-        "url": "https://api.rcszilla.com/docs/"
+        "url": "https://docs.rcszilla.com/"
       }
     ],
     "credentialDocumentation": [
       {
-        "url": "https://api.rcszilla.com/docs/?page=authentication"
+        "url": "https://docs.rcszilla.com/?page=authentication"
       }
     ]
   }
