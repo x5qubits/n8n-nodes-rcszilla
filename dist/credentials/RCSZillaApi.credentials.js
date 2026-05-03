@@ -5,7 +5,7 @@ class RCSZillaApi {
     constructor() {
         this.name = 'rcsZillaApi';
         this.displayName = 'RCSZilla API';
-        this.icon = 'file:../nodes/RCSZilla/rcszilla.svg';
+        this.icon = 'file:../nodes/RCSZilla/rcszilla.png';
         this.documentationUrl = 'https://api.rcszilla.com/docs/';
         this.properties = [
             {

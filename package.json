@@ -14,10 +14,10 @@
   "homepage": "https://rcszilla.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rcszilla/n8n-nodes-rcszilla.git"
+    "url": "git+https://github.com/x5qubits/n8n-nodes-rcszilla.git"
   },
   "bugs": {
-    "url": "https://github.com/rcszilla/n8n-nodes-rcszilla/issues"
+    "url": "https://github.com/x5qubits/n8n-nodes-rcszilla/issues"
   },
   "author": {
     "name": "RCSZilla"

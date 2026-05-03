@@ -2,7 +2,7 @@ import type { IAuthenticateGeneric, ICredentialTestRequest, ICredentialType, INo
 export declare class RCSZillaApi implements ICredentialType {
     name: string;
     displayName: string;
-    icon: "file:../nodes/RCSZilla/rcszilla.svg";
+    icon: "file:../nodes/RCSZilla/rcszilla.png";
     documentationUrl: string;
     properties: INodeProperties[];
     authenticate: IAuthenticateGeneric;

@@ -10,7 +10,7 @@ export class RCSZillaApi implements ICredentialType {
 
 	displayName = 'RCSZilla API';
 
-	icon = 'file:../nodes/RCSZilla/rcszilla.svg' as const;
+	icon = 'file:../nodes/RCSZilla/rcszilla.png' as const;
 
 	documentationUrl = 'https://api.rcszilla.com/docs/';
 

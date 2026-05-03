@@ -13,7 +13,7 @@ export class RCSZilla implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'RCSZilla',
 		name: 'rcsZilla',
-		icon: 'file:rcszilla.svg',
+		icon: 'file:rcszilla.png',
 		group: ['output'],
 		version: 1,
 		subtitle: '={{$parameter["operation"]}}',
