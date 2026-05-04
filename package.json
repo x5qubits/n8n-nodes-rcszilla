@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-rcszilla",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Send free device-based or paid provider SMS and WhatsApp messages with queue tracking, replies, and AI auto-reply support.",
   "keywords": [
     "n8n-community-node-package",
@@ -24,7 +24,7 @@
     "messaging",
     "automation"
   ],
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "homepage": "https://rcszilla.com",
   "repository": {
     "type": "git",
