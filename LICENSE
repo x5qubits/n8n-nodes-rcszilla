@@ -1,9 +1,11 @@
-RCSZilla Proprietary License
+Five Quantum Bits DBA RCSZilla Proprietary License
 
-Copyright (c) 2026 RCSZilla. All rights reserved.
+Copyright (c) 2026 Five Quantum Bits, doing business as RCSZilla. All rights
+reserved.
 
 This software and associated documentation files (the "Software") are the
-confidential and proprietary property of RCSZilla.
+confidential and proprietary property of Five Quantum Bits, doing business as
+RCSZilla ("RCSZilla").
 
 Permission is granted to download, install, and use the Software only as an
 n8n community node package for connecting n8n workflows to RCSZilla services.
@@ -24,6 +26,7 @@ you may not:
 The Software is provided "as is", without warranty of any kind, express or
 implied, including but not limited to the warranties of merchantability,
 fitness for a particular purpose, and noninfringement. In no event shall
-RCSZilla or its authors be liable for any claim, damages, or other liability,
-whether in an action of contract, tort, or otherwise, arising from, out of, or
-in connection with the Software or the use or other dealings in the Software.
+Five Quantum Bits, RCSZilla, or their authors be liable for any claim, damages,
+or other liability, whether in an action of contract, tort, or otherwise,
+arising from, out of, or in connection with the Software or the use or other
+dealings in the Software.
