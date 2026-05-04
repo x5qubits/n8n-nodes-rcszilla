@@ -9,10 +9,11 @@ class RCSZillaApi {
         this.documentationUrl = 'https://docs.rcszilla.com/';
         this.properties = [
             {
-                displayName: 'You need a RCSZilla account to use this credential. Register at <a href="https://rcszilla.com/" target="_blank">rcszilla.com</a>, then create an API key or device token in RCSZilla.',
+                displayName: 'RCSZilla Account Required',
                 name: 'accountNotice',
                 type: 'notice',
                 default: '',
+                description: 'You need a RCSZilla account to use this credential. Register at <a href="https://rcszilla.com/" target="_blank">rcszilla.com</a>, then create an API key or device token in RCSZilla.',
             },
             {
                 displayName: 'Base URL',

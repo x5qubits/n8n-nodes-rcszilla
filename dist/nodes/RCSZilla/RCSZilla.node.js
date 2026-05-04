@@ -23,18 +23,13 @@ class RCSZilla {
                     required: true,
                 },
             ],
-            requestDefaults: {
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            },
             properties: [
                 {
-                    displayName: 'You need a RCSZilla account to use this node. Register at <a href="https://rcszilla.com/" target="_blank">rcszilla.com</a>, then create an API key or device token in RCSZilla.',
+                    displayName: 'RCSZilla Account Required',
                     name: 'accountNotice',
                     type: 'notice',
                     default: '',
+                    description: 'You need a RCSZilla account to use this node. Register at <a href="https://rcszilla.com/" target="_blank">rcszilla.com</a>, then create an API key or device token in RCSZilla.',
                 },
                 {
                     displayName: 'Operation',
@@ -241,6 +236,10 @@ class RCSZilla {
                     method: request.method,
                     baseURL: baseUrl,
                     url: '/',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    },
                     qs: request.qs,
                     body: request.body,
                     json: true,
@@ -270,13 +269,21 @@ class RCSZilla {
                     });
                     continue;
                 }
-                throw error;
+                throw toNodeApiError(this, error, i);
             }
         }
         return [returnData];
     }
 }
 exports.RCSZilla = RCSZilla;
+function toNodeApiError(executeFunctions, error, itemIndex) {
+    if (error instanceof n8n_workflow_1.NodeApiError || error instanceof n8n_workflow_1.NodeOperationError) {
+        return error;
+    }
+    return new n8n_workflow_1.NodeApiError(executeFunctions.getNode(), error, {
+        itemIndex,
+    });
+}
 function buildRequest(executeFunctions, operation, itemIndex) {
     switch (operation) {
         case 'queueMessage': {

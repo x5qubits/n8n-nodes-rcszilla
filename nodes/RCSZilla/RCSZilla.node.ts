@@ -4,8 +4,9 @@ import type {
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
+	JsonObject,
 } from 'n8n-workflow';
-import { NodeOperationError } from 'n8n-workflow';
+import { NodeApiError, NodeOperationError } from 'n8n-workflow';
 
 type HttpMethod = 'GET' | 'POST';
 
@@ -29,19 +30,14 @@ export class RCSZilla implements INodeType {
 				required: true,
 			},
 		],
-		requestDefaults: {
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-			},
-		},
 		properties: [
 			{
-				displayName:
-					'You need a RCSZilla account to use this node. Register at <a href="https://rcszilla.com/" target="_blank">rcszilla.com</a>, then create an API key or device token in RCSZilla.',
+				displayName: 'RCSZilla Account Required',
 				name: 'accountNotice',
 				type: 'notice',
 				default: '',
+				description:
+					'You need a RCSZilla account to use this node. Register at <a href="https://rcszilla.com/" target="_blank">rcszilla.com</a>, then create an API key or device token in RCSZilla.',
 			},
 			{
 				displayName: 'Operation',
@@ -253,6 +249,10 @@ export class RCSZilla implements INodeType {
 						method: request.method,
 						baseURL: baseUrl,
 						url: '/',
+						headers: {
+							Accept: 'application/json',
+							'Content-Type': 'application/json',
+						},
 						qs: request.qs,
 						body: request.body,
 						json: true,
@@ -284,13 +284,27 @@ export class RCSZilla implements INodeType {
 					});
 					continue;
 				}
-				throw error;
+				throw toNodeApiError(this, error, i);
 			}
 		}
 
 		return [returnData];
 	}
 
+}
+
+function toNodeApiError(
+	executeFunctions: IExecuteFunctions,
+	error: unknown,
+	itemIndex: number,
+): NodeApiError | NodeOperationError {
+	if (error instanceof NodeApiError || error instanceof NodeOperationError) {
+		return error;
+	}
+
+	return new NodeApiError(executeFunctions.getNode(), error as JsonObject, {
+		itemIndex,
+	});
 }
 
 function buildRequest(executeFunctions: IExecuteFunctions, operation: string, itemIndex: number): {
