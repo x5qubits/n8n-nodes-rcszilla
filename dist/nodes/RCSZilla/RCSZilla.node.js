@@ -167,7 +167,7 @@ class RCSZilla {
                     description: 'Pass phone numbers (one per line) <b>or</b> an expression that returns an array of objects — see the hint below.',
                 },
                 {
-                    displayName: '💡 Bulk mode accepts a single object or an array of objects. Each item should look like: { "phone": "+40712345678", "body": "Your message here", "label": "optional tag", "subject": "optional subject", "is_priority": 1 }. To pull from a previous step use ={{ $json.items }}',
+                    displayName: '💡 Bulk mode accepts a single object or an array of objects.\nEach item: { "phone": "+40712345678", "body": "Your message", "label": "tag", "subject": "subject", "is_priority": 1 }\nTo pull from a previous step: ={{ $json.items }}',
                     name: 'bulkHint',
                     type: 'notice',
                     default: '',
