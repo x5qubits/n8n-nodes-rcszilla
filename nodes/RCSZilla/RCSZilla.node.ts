@@ -175,7 +175,7 @@ export class RCSZilla implements INodeType {
 				description: 'Pass phone numbers (one per line) <b>or</b> an expression that returns an array of objects — see the hint below.',
 			},
 			{
-				displayName: '💡 Two ways to use bulk mode',
+				displayName: '💡 Option A — same message to all: paste phone numbers one per line in Recipients, fill in Message below. | Option B — personalized messages: set Recipients to an expression like ={{ $json.sms_inject.items }} and leave Message empty. Each item needs a phone (or to) and body (or message) field.',
 				name: 'bulkHint',
 				type: 'notice',
 				default: '',
@@ -185,15 +185,7 @@ export class RCSZilla implements INodeType {
 						recipientMode: ['bulk'],
 					},
 				},
-				description: `<b>Option A — same message to many numbers</b><br>
-Paste phone numbers one per line (or comma-separated) in the Recipients field, then fill in the Message field below.<br><br>
-<b>Option B — personalized message per recipient (e.g. from a Code node)</b><br>
-Set Recipients to an expression that returns an array of objects, and leave Message empty.<br>
-Each object must have <code>phone</code> (or <code>to</code>) and <code>body</code> (or <code>message</code>).<br><br>
-<b>Example — using a Code node output:</b><br>
-<code>{{ $json.sms_inject.items }}</code><br><br>
-Where each item looks like:<br>
-<code>{ "phone": "+40712345678", "body": "Hi! Your link: https://..." }</code>`,
+				description: '',
 			},
 			{
 				displayName: 'Message',
