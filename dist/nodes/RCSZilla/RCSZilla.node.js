@@ -151,20 +151,20 @@ class RCSZilla {
                     description: 'Recipient phone number in international format',
                 },
                 {
-                    displayName: 'Phone Numbers',
+                    displayName: 'Recipients',
                     name: 'recipients',
                     type: 'string',
                     typeOptions: { rows: 5 },
                     required: true,
                     default: '',
-                    placeholder: '+40712345678\n+40712345679\n+40712345680',
+                    placeholder: '+40712345678\n+40712345679',
                     displayOptions: {
                         show: {
                             operation: ['queueMessage'],
                             recipientMode: ['bulk'],
                         },
                     },
-                    description: 'One phone number per line, or comma-separated. You can also pass a JSON array expression (e.g. <code>={{ $json.phones }}</code>).',
+                    description: 'Three formats accepted:<br>• Phone numbers (one per line or comma-separated) — uses the Message field below for all<br>• A JSON array of objects: <code>={{ $json.items }}</code> where each object has <code>to</code> and <code>message</code> (and optionally <code>channel</code>, <code>scheduled_at</code>) — each recipient gets its own message<br>• A single expression returning an array of either format',
                 },
                 {
                     displayName: 'Message',
@@ -468,20 +468,22 @@ class RCSZilla {
         for (let i = 0; i < items.length; i++) {
             try {
                 const operation = this.getNodeParameter('operation', i);
-                // Bulk send: make one API call per recipient and collect all results
+                // Bulk send: one API call with all items, each with its own phone + message
                 if (operation === 'queueMessage') {
                     const recipientMode = this.getNodeParameter('recipientMode', i, 'single');
                     if (recipientMode === 'bulk') {
-                        const phones = parseRecipients(this.getNodeParameter('recipients', i));
-                        if (!phones.length) {
-                            throw new n8n_workflow_1.NodeOperationError(this.getNode(), 'No valid phone numbers found in the Phone Numbers field.', { itemIndex: i });
+                        const rawRecipients = this.getNodeParameter('recipients', i);
+                        const bulkItems = parseBulkItems(rawRecipients, this.getNodeParameter('message', i, ''), this.getNodeParameter('channel', i, 'sms'), this.getNodeParameter('scheduledAt', i, ''));
+                        if (!bulkItems.length) {
+                            throw new n8n_workflow_1.NodeOperationError(this.getNode(), 'No valid items found. Provide phone numbers in the Phone Numbers field or an array of {to, message} objects.', { itemIndex: i });
                         }
-                        for (const phone of phones) {
-                            const req = buildQueueMessageRequest(this, i, phone);
-                            const resp = await callApi(this, baseUrl, req);
-                            checkSuccess(this, resp, i);
-                            returnData.push({ json: resp, pairedItem: { item: i } });
-                        }
+                        const resp = await callApi(this, baseUrl, {
+                            method: 'POST',
+                            qs: { endpoint: 'queue_bulk' },
+                            body: { items: bulkItems },
+                        });
+                        checkSuccess(this, resp, i);
+                        returnData.push({ json: resp, pairedItem: { item: i } });
                         continue;
                     }
                 }
@@ -533,13 +535,35 @@ function toNodeApiError(ef, error, itemIndex) {
         return error;
     return new n8n_workflow_1.NodeApiError(ef.getNode(), error, { itemIndex });
 }
-function parseRecipients(value) {
-    if (Array.isArray(value))
-        return value.map((v) => String(v).trim()).filter(Boolean);
-    return String(value)
-        .split(/[\n,;]+/)
-        .map((v) => v.trim())
-        .filter(Boolean);
+function parseBulkItems(value, fallbackMessage, fallbackChannel, fallbackScheduledAt) {
+    var _a, _b, _c, _d, _e, _f;
+    const raw = Array.isArray(value) ? value : String(value).split(/[\n,;]+/);
+    const items = [];
+    for (const entry of raw) {
+        if (typeof entry === 'object' && entry !== null) {
+            // Array of {to, message, ...} objects — each gets its own message
+            const to = String((_a = entry.to) !== null && _a !== void 0 ? _a : '').trim();
+            const msg = String((_c = (_b = entry.message) !== null && _b !== void 0 ? _b : fallbackMessage) !== null && _c !== void 0 ? _c : '').trim();
+            if (!to || !msg)
+                continue;
+            const item = { to, message: msg, channel: (_d = entry.channel) !== null && _d !== void 0 ? _d : fallbackChannel };
+            const sched = String((_f = (_e = entry.scheduled_at) !== null && _e !== void 0 ? _e : fallbackScheduledAt) !== null && _f !== void 0 ? _f : '').trim();
+            if (sched)
+                item.scheduled_at = formatDateTime(sched);
+            items.push(item);
+        }
+        else {
+            // Plain phone number string — use the shared Message field
+            const to = String(entry).trim();
+            if (!to || !fallbackMessage)
+                continue;
+            const item = { to, message: fallbackMessage, channel: fallbackChannel };
+            if (fallbackScheduledAt)
+                item.scheduled_at = formatDateTime(fallbackScheduledAt);
+            items.push(item);
+        }
+    }
+    return items;
 }
 function buildQueueMessageRequest(ef, itemIndex, toPhone) {
     const scheduledAt = ef.getNodeParameter('scheduledAt', itemIndex, '');

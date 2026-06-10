@@ -159,20 +159,20 @@ export class RCSZilla implements INodeType {
 				description: 'Recipient phone number in international format',
 			},
 			{
-				displayName: 'Phone Numbers',
+				displayName: 'Recipients',
 				name: 'recipients',
 				type: 'string',
 				typeOptions: { rows: 5 },
 				required: true,
 				default: '',
-				placeholder: '+40712345678\n+40712345679\n+40712345680',
+				placeholder: '+40712345678\n+40712345679',
 				displayOptions: {
 					show: {
 						operation: ['queueMessage'],
 						recipientMode: ['bulk'],
 					},
 				},
-				description: 'One phone number per line, or comma-separated. You can also pass a JSON array expression (e.g. <code>={{ $json.phones }}</code>).',
+				description: 'Three formats accepted:<br>• Phone numbers (one per line or comma-separated) — uses the Message field below for all<br>• A JSON array of objects: <code>={{ $json.items }}</code> where each object has <code>to</code> and <code>message</code> (and optionally <code>channel</code>, <code>scheduled_at</code>) — each recipient gets its own message<br>• A single expression returning an array of either format',
 			},
 			{
 				displayName: 'Message',
@@ -486,26 +486,31 @@ export class RCSZilla implements INodeType {
 			try {
 				const operation = this.getNodeParameter('operation', i) as string;
 
-				// Bulk send: make one API call per recipient and collect all results
+				// Bulk send: one API call with all items, each with its own phone + message
 				if (operation === 'queueMessage') {
 					const recipientMode = this.getNodeParameter('recipientMode', i, 'single') as string;
 					if (recipientMode === 'bulk') {
-						const phones = parseRecipients(
-							this.getNodeParameter('recipients', i) as string | string[],
+						const rawRecipients = this.getNodeParameter('recipients', i) as string | string[] | IDataObject[];
+						const bulkItems = parseBulkItems(
+							rawRecipients,
+							this.getNodeParameter('message', i, '') as string,
+							this.getNodeParameter('channel', i, 'sms') as string,
+							this.getNodeParameter('scheduledAt', i, '') as string,
 						);
-						if (!phones.length) {
+						if (!bulkItems.length) {
 							throw new NodeOperationError(
 								this.getNode(),
-								'No valid phone numbers found in the Phone Numbers field.',
+								'No valid items found. Provide phone numbers in the Phone Numbers field or an array of {to, message} objects.',
 								{ itemIndex: i },
 							);
 						}
-						for (const phone of phones) {
-							const req = buildQueueMessageRequest(this, i, phone);
-							const resp = await callApi(this, baseUrl, req);
-							checkSuccess(this, resp, i);
-							returnData.push({ json: resp as IDataObject, pairedItem: { item: i } });
-						}
+						const resp = await callApi(this, baseUrl, {
+							method: 'POST',
+							qs: { endpoint: 'queue_bulk' },
+							body: { items: bulkItems },
+						});
+						checkSuccess(this, resp, i);
+						returnData.push({ json: resp as IDataObject, pairedItem: { item: i } });
 						continue;
 					}
 				}
@@ -569,12 +574,34 @@ function toNodeApiError(
 	return new NodeApiError(ef.getNode(), error as JsonObject, { itemIndex });
 }
 
-function parseRecipients(value: string | string[]): string[] {
-	if (Array.isArray(value)) return value.map((v) => String(v).trim()).filter(Boolean);
-	return String(value)
-		.split(/[\n,;]+/)
-		.map((v) => v.trim())
-		.filter(Boolean);
+function parseBulkItems(
+	value: string | string[] | IDataObject[],
+	fallbackMessage: string,
+	fallbackChannel: string,
+	fallbackScheduledAt: string,
+): IDataObject[] {
+	const raw = Array.isArray(value) ? value : String(value).split(/[\n,;]+/);
+	const items: IDataObject[] = [];
+	for (const entry of raw) {
+		if (typeof entry === 'object' && entry !== null) {
+			// Array of {to, message, ...} objects — each gets its own message
+			const to = String((entry as IDataObject).to ?? '').trim();
+			const msg = String((entry as IDataObject).message ?? fallbackMessage ?? '').trim();
+			if (!to || !msg) continue;
+			const item: IDataObject = { to, message: msg, channel: (entry as IDataObject).channel ?? fallbackChannel };
+			const sched = String((entry as IDataObject).scheduled_at ?? fallbackScheduledAt ?? '').trim();
+			if (sched) item.scheduled_at = formatDateTime(sched);
+			items.push(item);
+		} else {
+			// Plain phone number string — use the shared Message field
+			const to = String(entry).trim();
+			if (!to || !fallbackMessage) continue;
+			const item: IDataObject = { to, message: fallbackMessage, channel: fallbackChannel };
+			if (fallbackScheduledAt) item.scheduled_at = formatDateTime(fallbackScheduledAt);
+			items.push(item);
+		}
+	}
+	return items;
 }
 
 function buildQueueMessageRequest(
