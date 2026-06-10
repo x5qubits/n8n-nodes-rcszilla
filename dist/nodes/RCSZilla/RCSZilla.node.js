@@ -536,24 +536,25 @@ function toNodeApiError(ef, error, itemIndex) {
     return new n8n_workflow_1.NodeApiError(ef.getNode(), error, { itemIndex });
 }
 function parseBulkItems(value, fallbackMessage, fallbackChannel, fallbackScheduledAt) {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b, _c, _d, _e, _f, _g, _h;
     const raw = Array.isArray(value) ? value : String(value).split(/[\n,;]+/);
     const items = [];
     for (const entry of raw) {
         if (typeof entry === 'object' && entry !== null) {
-            // Array of {to, message, ...} objects — each gets its own message
-            const to = String((_a = entry.to) !== null && _a !== void 0 ? _a : '').trim();
-            const msg = String((_c = (_b = entry.message) !== null && _b !== void 0 ? _b : fallbackMessage) !== null && _c !== void 0 ? _c : '').trim();
+            const obj = entry;
+            // accept to/phone and message/body as equivalent field names
+            const to = String((_b = (_a = obj.to) !== null && _a !== void 0 ? _a : obj.phone) !== null && _b !== void 0 ? _b : '').trim();
+            const msg = String((_e = (_d = (_c = obj.message) !== null && _c !== void 0 ? _c : obj.body) !== null && _d !== void 0 ? _d : fallbackMessage) !== null && _e !== void 0 ? _e : '').trim();
             if (!to || !msg)
                 continue;
-            const item = { to, message: msg, channel: (_d = entry.channel) !== null && _d !== void 0 ? _d : fallbackChannel };
-            const sched = String((_f = (_e = entry.scheduled_at) !== null && _e !== void 0 ? _e : fallbackScheduledAt) !== null && _f !== void 0 ? _f : '').trim();
+            const item = { to, message: msg, channel: (_f = obj.channel) !== null && _f !== void 0 ? _f : fallbackChannel };
+            const sched = String((_h = (_g = obj.scheduled_at) !== null && _g !== void 0 ? _g : fallbackScheduledAt) !== null && _h !== void 0 ? _h : '').trim();
             if (sched)
                 item.scheduled_at = formatDateTime(sched);
             items.push(item);
         }
         else {
-            // Plain phone number string — use the shared Message field
+            // plain phone number — use the shared Message field
             const to = String(entry).trim();
             if (!to || !fallbackMessage)
                 continue;

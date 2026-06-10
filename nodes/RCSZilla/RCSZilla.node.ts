@@ -584,16 +584,17 @@ function parseBulkItems(
 	const items: IDataObject[] = [];
 	for (const entry of raw) {
 		if (typeof entry === 'object' && entry !== null) {
-			// Array of {to, message, ...} objects — each gets its own message
-			const to = String((entry as IDataObject).to ?? '').trim();
-			const msg = String((entry as IDataObject).message ?? fallbackMessage ?? '').trim();
+			const obj = entry as IDataObject;
+			// accept to/phone and message/body as equivalent field names
+			const to  = String(obj.to   ?? obj.phone   ?? '').trim();
+			const msg = String(obj.message ?? obj.body ?? fallbackMessage ?? '').trim();
 			if (!to || !msg) continue;
-			const item: IDataObject = { to, message: msg, channel: (entry as IDataObject).channel ?? fallbackChannel };
-			const sched = String((entry as IDataObject).scheduled_at ?? fallbackScheduledAt ?? '').trim();
+			const item: IDataObject = { to, message: msg, channel: obj.channel ?? fallbackChannel };
+			const sched = String(obj.scheduled_at ?? fallbackScheduledAt ?? '').trim();
 			if (sched) item.scheduled_at = formatDateTime(sched);
 			items.push(item);
 		} else {
-			// Plain phone number string — use the shared Message field
+			// plain phone number — use the shared Message field
 			const to = String(entry).trim();
 			if (!to || !fallbackMessage) continue;
 			const item: IDataObject = { to, message: fallbackMessage, channel: fallbackChannel };
