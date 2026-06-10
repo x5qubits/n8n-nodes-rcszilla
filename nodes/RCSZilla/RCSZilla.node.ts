@@ -175,7 +175,7 @@ export class RCSZilla implements INodeType {
 				description: 'Pass phone numbers (one per line) <b>or</b> an expression that returns an array of objects — see the hint below.',
 			},
 			{
-				displayName: '💡 Bulk mode accepts a single object or an array of objects.\nEach item: { "phone": "+40712345678", "body": "Your message", "label": "tag", "subject": "subject", "is_priority": 1 }\nTo pull from a previous step: ={{ $json.items }}',
+				displayName: '💡 Bulk mode accepts a single object or an array of objects.\nEach item: { "phone": "+40712345678", "body": "Your message", "label": "tag", "subject": "subject", "is_priority": 1 }\nTo pull from a previous step: ={{ $json.items }}. Message field can be left blank.',
 				name: 'bulkHint',
 				type: 'notice',
 				default: '',
