@@ -167,7 +167,7 @@ class RCSZilla {
                     description: 'Pass phone numbers (one per line) <b>or</b> an expression that returns an array of objects — see the hint below.',
                 },
                 {
-                    displayName: '💡 Option A — same message to all: paste phone numbers one per line in Recipients, fill in Message below. | Option B — personalized messages: set Recipients to an expression like ={{ $json.sms_inject.items }} and leave Message empty. Each item needs a phone (or to) and body (or message) field.',
+                    displayName: '💡 Bulk mode accepts a single object or an array of objects. Each item should look like: { "phone": "+40712345678", "body": "Your message here", "label": "optional tag", "subject": "optional subject", "is_priority": 1 }. To pull from a previous step use ={{ $json.items }}',
                     name: 'bulkHint',
                     type: 'notice',
                     default: '',
