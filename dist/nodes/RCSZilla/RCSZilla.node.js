@@ -129,7 +129,7 @@ class RCSZilla {
                         {
                             name: 'Multiple Recipients (Bulk)',
                             value: 'bulk',
-                            description: 'Send the same message to several phone numbers at once',
+                            description: 'Send to several phone numbers at once — each can have its own message',
                         },
                     ],
                     default: 'single',
@@ -164,7 +164,28 @@ class RCSZilla {
                             recipientMode: ['bulk'],
                         },
                     },
-                    description: 'Three formats accepted:<br>• Phone numbers (one per line or comma-separated) — uses the Message field below for all<br>• A JSON array of objects: <code>={{ $json.items }}</code> where each object has <code>to</code> and <code>message</code> (and optionally <code>channel</code>, <code>scheduled_at</code>) — each recipient gets its own message<br>• A single expression returning an array of either format',
+                    description: 'Pass phone numbers (one per line) <b>or</b> an expression that returns an array of objects — see the hint below.',
+                },
+                {
+                    displayName: '💡 Two ways to use bulk mode',
+                    name: 'bulkHint',
+                    type: 'notice',
+                    default: '',
+                    displayOptions: {
+                        show: {
+                            operation: ['queueMessage'],
+                            recipientMode: ['bulk'],
+                        },
+                    },
+                    description: `<b>Option A — same message to many numbers</b><br>
+Paste phone numbers one per line (or comma-separated) in the Recipients field, then fill in the Message field below.<br><br>
+<b>Option B — personalized message per recipient (e.g. from a Code node)</b><br>
+Set Recipients to an expression that returns an array of objects, and leave Message empty.<br>
+Each object must have <code>phone</code> (or <code>to</code>) and <code>body</code> (or <code>message</code>).<br><br>
+<b>Example — using a Code node output:</b><br>
+<code>{{ $json.sms_inject.items }}</code><br><br>
+Where each item looks like:<br>
+<code>{ "phone": "+40712345678", "body": "Hi! Your link: https://..." }</code>`,
                 },
                 {
                     displayName: 'Message',
@@ -173,7 +194,7 @@ class RCSZilla {
                     typeOptions: { rows: 4 },
                     required: true,
                     default: '',
-                    description: 'The text to send',
+                    description: 'The text to send. Not needed in bulk mode when each recipient object already contains its own message.',
                     displayOptions: {
                         show: { operation: ['queueMessage', 'submitReply', 'logOutgoing'] },
                     },
