@@ -16,12 +16,12 @@ export class RCSZillaApi implements ICredentialType {
 
 	properties: INodeProperties[] = [
 		{
-			displayName: 'RCSZilla Account Required',
+			displayName: 'New to RCSZilla?',
 			name: 'accountNotice',
 			type: 'notice',
 			default: '',
 			description:
-				'You need a RCSZilla account to use this credential. Register at <a href="https://rcszilla.com/" target="_blank">rcszilla.com</a>, then create an API key or device token in RCSZilla.',
+				'Create your free account at <a href="https://rcszilla.com/" target="_blank">rcszilla.com</a> to get your API key or device token. Already have an account? Just paste your key below.',
 		},
 		{
 			displayName: 'Base URL',
